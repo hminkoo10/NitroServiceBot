@@ -16,6 +16,7 @@ intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='.',
                    intents=intents,
                    owner_ids=[904980776557363200,712290125505363980])
+bot.remove_command("help")
 
 # 코그 로드
 for file in os.listdir("bot"):
@@ -211,4 +212,4 @@ async def load(ctx, module="all"):
         await ctx.reply(embed=embed("로드 실패 <a:decline:989867857905070080>",
                                     "로드중 오류가 발생했습니다"))
 
-bot.run("token")
+bot.run(os.getenv("token"))
