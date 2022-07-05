@@ -62,6 +62,5 @@ class Admin(commands.Cog):
         result = (await eval(f"{fn_name}()", env))
         await ctx.reply(result)
 
-
 def setup(bot):
     bot.add_cog(Admin(bot))

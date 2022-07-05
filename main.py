@@ -5,36 +5,35 @@ import os
 import asyncio
 import random
 import re
-
+try:
+    from discord_slash import SlashCommand
+except:
+    os.system("pip install -U git+https://github.com/interactions-py/library@legacy")
+    from discord_slash import SlashCommand
 # 임배드 함수
 def embed(title, description, color=random.randint(0x000000, 0xFFFFFF)):
     return discord.Embed(title=title, description=description, color=color)
 
-
 # 봇 변수 설정
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix='.',
-                   intents=intents,
-                   owner_ids=[904980776557363200,712290125505363980])
+bot = commands.Bot(
+            command_prefix='.',
+            intents=intents,
+           owner_ids=[904980776557363200,712290125505363980]
+        )
 bot.remove_command("help")
-
-# 코그 로드
+slash = SlashCommand(bot, sync_commands=True,sync_on_cog_reload=True)
 for file in os.listdir("bot"):
-    if file.endswith(".py"):
-        bot.load_extension(f"bot.{file[:-3]}")
-        print(f"bot.{file[:-3]}가 로드되었습니다")
-
-
-# 봇 준비 로그
+        if file.endswith(".py"):
+            bot.load_extension(f"bot.{file[:-3]}")
+            print(f"bot.{file[:-3]}가 로드되었습니다")
 @bot.event
 async def on_ready():
     print(f"{bot.user.name} Login successful!")
     await bot.change_presence(
         status=discord.Status.online,
         activity=discord.Game(
-            name=f"Ver. Release 1.0 | 알아서 넣으삼"))
-
-
+            name=f"Ver. Release 3.0 | Community Bot for Nitro Service"))
 # Error
 @bot.listen()
 async def on_command_error(ctx, error):
@@ -54,7 +53,7 @@ async def on_command_error(ctx, error):
             embed = discord.Embed(
                 title="잠시만요!",
                 description=
-                f"이 명령어를 사용할 수 없어요! `${asdf}`는 없는 명령어에요! 다른 명령어로 변경됐을 수도 있으니 `$help`로 모든 명령어 목록을 보세요!"
+                f"이 명령어를 사용할 수 없어요! `.{asdf}`는 없는 명령어에요! 다른 명령어로 변경됐을 수도 있으니 `$help`로 모든 명령어 목록을 보세요!"
             )
             await ctx.message.reply(embed=embed)
             return
@@ -163,7 +162,6 @@ async def unload(ctx, module="all"):
             embeds = await ctx.reply(embed=embed("언로드중", "잠시만 기다려 주세요!"))
             await asyncio.sleep(2)
             bot.unload_extension(f"bot.{module}")
-            bot.load_extension(f"bot.{module}")
             await embeds.edit(
                 embed=embed("언로드 완료 <a:check:989867860153208862>",
                             f"{module}모듈 언로드가 완료되었습니다!", discord.Color.green())
@@ -203,7 +201,6 @@ async def load(ctx, module="all"):
         else:
             embeds = await ctx.reply(embed=embed("로드중", "잠시만 기다려 주세요!"))
             await asyncio.sleep(2)
-            bot.unload_extension(f"bot.{module}")
             bot.load_extension(f"bot.{module}")
             await embeds.edit(
                 embed=embed("로드 완료 <a:check:989867860153208862>",

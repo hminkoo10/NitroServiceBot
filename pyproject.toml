@@ -6,6 +6,8 @@ authors = ["hminkoo10 <<>>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+orjson = "^3.7.3"
+typing-extensions = "^4.2.0"
 discord = "^1.7.3"
 
 [tool.poetry.dev-dependencies]
